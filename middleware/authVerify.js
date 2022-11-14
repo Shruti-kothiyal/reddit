@@ -5,6 +5,7 @@ const authverify = (req, res, next) => {
       if (err) {
         return res.json({ message: "token is not valid" });
       } else {
+        console.log("decoded",decoded)
         req.userId = decoded.userId;
         console.log("use id in authVerify ",req.userId)
         next();

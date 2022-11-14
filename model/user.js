@@ -20,13 +20,15 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+
 userSchema.methods = {
+  
   createToken() {
-    return jwt.sign({ _id: this.id},process.env.key, { expiresIn: "7d" });
+    return jwt.sign({userId: this._id},process.env.key, { expiresIn: "7d" });
   },
   toAuthJSON() {
+    console.log(this.username, this._id)
     return {
-      _id: this.id,
       username: this.username,
       token: this.createToken(),
     };
