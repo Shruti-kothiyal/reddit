@@ -31,7 +31,7 @@ router.post("/register",imageupload.fields([
     }
 ]), userValidation, userRegisterController);
 
-router.get('/login',userLoginController)
+router.post('/login',userLoginController)
 
 router.post('/subreddit',imageupload.fields([
     {

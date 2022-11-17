@@ -8,6 +8,8 @@ app.use(express.static('images'))
 require("dotenv").config()
 const mongoose = require('mongoose');
 const url = "mongodb://0.0.0.0:27017/RedditDB";
+var cors = require('cors')
+app.use(cors())
 const client = mongoose.connect(url).then(response => {
   console.log("connected")
 }).catch(err=>{

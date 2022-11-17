@@ -9,9 +9,10 @@ const userLoginController=async(req,res,next)=>{
     const email=req.body.email;
     const otp=req.body.otp;
     const password=req.body.password;
+    console.log("body: ",req.body)
     if(password&&otp)
     return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid"});
-    User.findOne({
+    await User.findOne({
         email:email
     }).then((userFoundOrNot)=>{
         console.log("userFoundOrNot--------->",userFoundOrNot)
