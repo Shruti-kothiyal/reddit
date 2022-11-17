@@ -41,16 +41,15 @@ export default function SignIn() {
   }
 
   async function handleSubmit(){
-    // await axios({
-    //   method:"POST",
-    //   url:"http://localhost:5000/api/user/login",
-    //   data:formData
-    // }).then((response)=>{
-    //   console.log("response in sign up ",response)
-    // })
-    axios.post("http://localhost:5000/api/user/login", formData)
+    await axios.post("http://localhost:5000/api/user/login", formData)
     .then((response) => {
-      console.log("response in sign up ",response)
+      if (response.data.error) {
+        alert(response.data.error);
+      }
+      else{
+          console.log("data ====> ",response.data)
+          localStorage.setItem("token",response.data.token)
+      }
     })
     .catch((error) => {
       console.log("error : ", error)

@@ -1,5 +1,5 @@
 // import * as React from 'react';
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Navigate } from 'react-router-dom';
 import axios from "axios";
 
 function Copyright(props) {
@@ -29,26 +30,88 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const [fullName,setFullName]=useState("")
-  const [userName,setUserName]=useState("")
-  const [dob,setDob]=useState("")
-  const [email,setEmail]=useState("");
-  const [phoneNumber,setPhoneNumber]=useState("")
-  const [password,setPassword]=useState("")
+  const initialValues={fullName:"",userName:"",dob:"",email:"",phoneNumber:"",password:""}
+  const [formValues,setFormValues]=useState(initialValues)
+  const [formErrors,setFormErrors]=useState({})
+  const [isSubmit,setIsSubmit]=useState(false)
 
-  async function handleSubmit(){
-    await axios.post("http://localhost:5000/api/user/register",{
-      name:fullName,
-      username:userName,
-      dob:dob,
-      password:password,
-      email:email,
-      phone_number:phoneNumber,
-      //image:userImageReg
-    });
+  const handleChange=(e)=>{
+    const {name,value}=e.target
+    setFormValues({...formValues,[name]:value})
   }
+
+  const handleSubmit=async(e)=>{
+    e.preventDefault()
+    setFormErrors(validate(formValues))
+    setIsSubmit(true)
+  }
+
+  useEffect(()=>{
+    async function check(){
+      if(Object.keys(formErrors).length===0 && isSubmit){
+        await axios.post("http://localhost:5000/api/user/register",{
+          name:formValues.fullName,
+          username:formValues.userName,
+          dob:formValues.dob,
+          password:formValues.password,
+          email:formValues.email,
+          phone_number:formValues.phoneNumber,
+          //image:userImageReg
+        }).then((response)=> {
+          console.log(response)
+        });
+      }
+    }
+    check()
+  },[formErrors])
+
+  const validate=(values)=>{
+    const errors={}
+    const regex=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    if(!values.fullName){
+      errors.fullName="Full name is required"
+    }
+
+    if(!values.userName){
+      errors.userName="Username is required"
+    }
+
+    if(!values.dob){
+      errors.dob="Dob is required"
+    }
+
+    if(!values.password){
+      errors.password="Password is required"
+    }else if(values.password.length<4){
+      errors.email="Password must be more than 4 characters"
+    }else if(values.password.length>10){
+      errors.email="Password cannot exceed more than 10 characters"
+    }
+
+    if(!values.email){
+      errors.email="Email is required"
+    }else if(!regex.test(values.email)){
+      errors.email="Enter valid email"
+    }
+
+    if(!values.phoneNumber){
+      errors.phoneNumber="Phone number is required"
+    }else if(values.phoneNumber.length!==10){
+      errors.phoneNumber="Enter correct number"
+    }
+    return errors
+  }
+
   return (
     <ThemeProvider theme={theme}>
+      {Object.keys(formErrors).length === 0 && isSubmit ? (
+        <Navigate to="/signIn" replace={true} />
+      ) : (
+        ""
+      )}
+      {/* {Object.keys(formErrors).length === 0 && isSubmit &&(
+      <Navigate to="/signIn" replace={true} />
+      )} */}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -75,11 +138,11 @@ export default function SignUp() {
                   fullWidth
                   id="fullName"
                   label="Full Name"
-                  onChange={(e)=>{
-                    setFullName(e.target.value)
-                  }}
                   autoFocus
+                  value={formValues.fullName}
+                  onChange={handleChange}
                 />
+                <Grid item>{formErrors.fullName}</Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -88,11 +151,11 @@ export default function SignUp() {
                   id="userName"
                   label="User_Name"
                   name="userName"
-                  autoComplete="family-name"
-                  onChange={(e)=>{
-                    setUserName(e.target.value)
-                  }}
+                  autoComplete="user-name"
+                  value={formValues.userName}
+                  onChange={handleChange}
                 />
+                <Grid item>{formErrors.userName}</Grid>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -102,10 +165,10 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  onChange={(e)=>{
-                    setEmail(e.target.value)
-                  }}
+                  value={formValues.email}
+                  onChange={handleChange}
                 />
+                <Grid item>{formErrors.email}</Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -114,10 +177,10 @@ export default function SignUp() {
                   name="dob"
                   type="date"
                   id="dob"
-                  onChange={(e)=>{
-                    setDob(e.target.value)
-                  }}
+                  value={formValues.dob}
+                  onChange={handleChange}
                 />
+                <Grid item>{formErrors.dob}</Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -128,10 +191,10 @@ export default function SignUp() {
                   type="number"
                   id="phoneNumber"
                   autoComplete="phone-number"
-                  onChange={(e)=>{
-                    setPhoneNumber(e.target.value)
-                  }}
+                  value={formValues.phoneNumber}
+                  onChange={handleChange}
                 />
+                <Grid item>{formErrors.phoneNumber}</Grid>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -142,10 +205,13 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  onChange={(e)=>{
-                    setPassword(e.target.value)
-                  }}
+                  value={formValues.password}
+                  onChange={handleChange}
+                  // onChange={(e)=>{
+                  //   setPassword(e.target.value)
+                  // }}
                 />
+                <Grid item>{formErrors.password}</Grid>
               </Grid>
               <Grid item xs={5}>
                 <Button
@@ -162,7 +228,8 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 1, mb: 1 }}
-              onClick={ () => handleSubmit()}
+              onClick={handleSubmit}
+              //onClick={ () => handleSubmit()}
             >
               Sign Up
             </Button>
