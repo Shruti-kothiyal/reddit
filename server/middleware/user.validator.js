@@ -4,7 +4,7 @@ const validation = joi.object({
     name:joi.string().min(3).max(25).required(),
     dob:joi.date().max('1-1-2007').iso(),
     phone_number:joi.number().integer().min(10**9).max(10**10 - 1).positive().required(),
-    password: joi.string().min(8).trim(true).required(),
+    password: joi.string().min(4).trim(true).required(),
     email: joi.string().email().trim(true).required(),
     username: joi.string().alphanum().min(3).max(25).trim(true).required(),
     image:joi.any(),

@@ -27,6 +27,7 @@ const userLoginController=async(req,res,next)=>{
                 Status: "Success",
                 msg: "Logged in!",
                 code:200,
+                status:userFoundOrNot.status,
                 token,
             };
             if(!password&&otp&&userFoundOrNot.status===false){

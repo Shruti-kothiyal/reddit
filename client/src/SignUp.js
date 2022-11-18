@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Navigate } from 'react-router-dom';
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 function Copyright(props) {
@@ -34,6 +34,7 @@ export default function SignUp() {
   const [formValues,setFormValues]=useState(initialValues)
   const [formErrors,setFormErrors]=useState({})
   const [isSubmit,setIsSubmit]=useState(false)
+  const navigate = useNavigate();
 
   const handleChange=(e)=>{
     const {name,value}=e.target
@@ -59,6 +60,7 @@ export default function SignUp() {
           //image:userImageReg
         }).then((response)=> {
           console.log(response)
+          navigate('/signIn', {state: response.data.Details})
         });
       }
     }
@@ -83,9 +85,9 @@ export default function SignUp() {
     if(!values.password){
       errors.password="Password is required"
     }else if(values.password.length<4){
-      errors.email="Password must be more than 4 characters"
+      errors.password="Password must be more than 4 characters"
     }else if(values.password.length>10){
-      errors.email="Password cannot exceed more than 10 characters"
+      errors.password="Password cannot exceed more than 10 characters"
     }
 
     if(!values.email){
@@ -104,14 +106,6 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
-      {Object.keys(formErrors).length === 0 && isSubmit ? (
-        <Navigate to="/signIn" replace={true} />
-      ) : (
-        ""
-      )}
-      {/* {Object.keys(formErrors).length === 0 && isSubmit &&(
-      <Navigate to="/signIn" replace={true} />
-      )} */}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
