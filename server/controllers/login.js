@@ -1,3 +1,4 @@
+//login.js
 const User = require('../model/user')
 const UserOtp=require('../model/user_otp')
 const responseMessages = require('../utils/constants')
@@ -18,7 +19,7 @@ const userLoginController=async(req,res,next)=>{
         console.log("userFoundOrNot--------->",userFoundOrNot)
         if(userFoundOrNot===null){
             console.log("User is not registered")
-            return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User",Details: userFoundOrNot});
+            return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User1",Details: userFoundOrNot});
         }else{
             const userId=userFoundOrNot.id
             console.log("user id =====>",userId)
@@ -37,7 +38,7 @@ const userLoginController=async(req,res,next)=>{
                     console.log("otp found or not ",otpFoundOrNot)
                     if(otpFoundOrNot==null){
                         console.log("otp row was deleted")
-                        return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User"});
+                        return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User2"});
                     }else{
                         console.log("otp _________",otpFoundOrNot.otp)
                         if(otpFoundOrNot.otp===otp){
@@ -66,14 +67,14 @@ const userLoginController=async(req,res,next)=>{
                         }
                     }
                 }).catch((otpError)=>{
-                    return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User",Details: otpError});
+                    return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User3",Details: otpError});
                 })
             }else if(password&&!otp&&userFoundOrNot.status===true){
                 User.findOne({
                     email:email
                 }).then((userFoundOrNot)=>{
                     if(userFoundOrNot===null)
-                    return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User",Details: userFoundOrNot});
+                    return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User4",Details: userFoundOrNot});
                     else{
                         bcrypt.compare(
                             password,
@@ -95,10 +96,10 @@ const userLoginController=async(req,res,next)=>{
                 return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"User already registered"});
             }
             else
-            return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User"});
+            return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User5"});
         }
     }).catch((userEmailNotRegistered)=>{
-        return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User2",Details: userEmailNotRegistered});
+        return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User6",Details: userEmailNotRegistered});
     })
 
 }

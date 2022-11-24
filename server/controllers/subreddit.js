@@ -8,8 +8,8 @@ const userSubReddit=async(req,res,next)=>{
     const img=req.files
     let avatar,coverphoto
     if(img){
-        if(img.avatar) avatar = "http://localhost:3000/avatar/" + img.avatar[0].filename;
-        if(img.coverphoto) coverphoto = "http://localhost:3000/coverphoto/" + img.coverphoto[0].filename;
+        if(img.avatar) avatar = "http://localhost:5000/avatar/" + img.avatar[0].filename;
+        if(img.coverphoto) coverphoto = "http://localhost:5000/coverphoto/" + img.coverphoto[0].filename;
     }
     const subreddit=new Subreddit({
         name:name,

@@ -3,6 +3,14 @@ const responseMessages = require('../utils/constants')
 
 const dispAllComment=async(req,res,next)=>{
     await UserComment.aggregate([
+        // {
+        //     $lookup:{
+        //         from:"usercomments",
+        //         localField:"_id",
+        //         foreignField:"mainCommentId",
+        //         as:"reply"
+        //     }
+        // },
         {
             $lookup:{
                 from:"usercomments",
@@ -11,6 +19,7 @@ const dispAllComment=async(req,res,next)=>{
                 as:"reply"
             }
         }
+        
     ]).then((result)=>{
         return res.send({ Status: responseMessages.SUCCESS, Details: result});
      }).catch((err)=>{

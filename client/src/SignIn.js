@@ -16,6 +16,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
+
+var CryptoJS = require("crypto-js");
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -34,12 +37,19 @@ const theme = createTheme();
 export default function SignIn(props) {
   console.log("props -----> ",props)
   const location=useLocation();
-  const initialValues={email:location.state?.email,password:"",otp:""}
+  console.log("location ---> ",location)
+  var originalDetails=""
+  if(location.state!==null){
+  var bytes  = CryptoJS.AES.decrypt(location.state,process.env.REACT_APP_KEY);
+  originalDetails = bytes.toString(CryptoJS.enc.Utf8);
+  originalDetails=JSON.parse(originalDetails)
+  console.log("original details -----> ",originalDetails)
+  }
+  const initialValues={email:originalDetails.email,password:"",otp:""}
   const [formValues,setFormValues]=useState(initialValues)
   const [formErrors,setFormErrors]=useState({})
   const [isSubmit,setIsSubmit]=useState(false)
-  
-  console.log("location.state ----> ",location.state);
+
   const handleChange=(e)=>{
     const {name,value}=e.target
     setFormValues({...formValues,[name]:value})
@@ -75,7 +85,7 @@ export default function SignIn(props) {
     }else if(!regex.test(values.email)){
       errors.email="Enter valid email"
     }
-    if(location.state?.status===true||location.state===null){
+    if(originalDetails.status===true||originalDetails.state===null){
       if(!values.password){
         errors.password="Password is required"
       }else if(values.password.length<4){
@@ -83,7 +93,7 @@ export default function SignIn(props) {
       }else if(values.password.length>10){
         errors.password="Password cannot exceed more than 10 characters"
       }
-    }else if(location.state?.status===false){
+    }else if(originalDetails.status===false){
       if(!values.otp){
         errors.otp="OTP is required"
       }
@@ -126,7 +136,7 @@ export default function SignIn(props) {
                 />
               <Grid item>{formErrors.email}</Grid>
             </Grid>
-            {location.state?.status||location.state===null?(
+            {originalDetails.status===true||location.state===null?(
               <Grid item xs={12}>
                 <TextField
                   margin="normal"

@@ -16,6 +16,7 @@ const {createToken}=require('../middleware/createToken')
 var jwt = require('jsonwebtoken');
 
 const userValidation = require("../middleware/user.validator")
+const userEncryptDecrypt=require('../middleware/encrypDecrypt')
 const {imageupload}=require('../middleware/imageUpload')
 const {authverify}=require('../middleware/authVerify')
 const authGoogle=require('../middleware/authGoogle')
@@ -42,7 +43,7 @@ router.post('/subreddit',imageupload.fields([
         name:'coverphoto',
         maxCount:1
     },
-]),authverify,userSubReddit)
+]),userSubReddit)
 
 router.post('/post',imageupload.fields([
     {

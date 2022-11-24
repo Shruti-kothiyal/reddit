@@ -8,6 +8,7 @@ const userPost=async(req,res,next)=>{
     const body=req.body.body
     const upvotes=0
     const downvotes=0
+    subredditId=req.body.subredditId
     let postimg
     const img=req.files
     console.log(img)
@@ -21,7 +22,7 @@ const userPost=async(req,res,next)=>{
         console.log("subredditIdFoundOrNot -----> ",subredditIdFoundOrNot)
         if(subredditIdFoundOrNot!==null){
             const post=new Post({
-                subredditId:subredditIdFoundOrNot.id,
+                subredditId:subredditId,
                 userId:userId,
                 caption:caption,
                 body:body,
