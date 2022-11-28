@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema(
     email: String,
     password: String,
     phone_number: Number,
-    image: String,
+    image: {
+      type:String,
+      default: null,
+    },
     status: {
       type: Boolean,
       default: 0,

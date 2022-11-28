@@ -1,18 +1,22 @@
 const Post=require('../model/post')
 const UserComment=require('../model/userComment')
 const responseMessages = require('../utils/constants')
+const mongoose = require("mongoose");
+
 const userComment=async(req,res,next)=>{
     const userId=req.userId
-    const postid=req.body.postid
+    const postid= req.body.postid
     const body=req.body.body
     const mainCommentId=req.body.mainCommentId
-    await Post.findOne({
-        id:postid
+    await Post.findById({
+        _id:postid
     }).then(async(postidFoundOrNot)=>{
+        console.log("postidFoundOrNot----> ",postidFoundOrNot)
         if(postidFoundOrNot===null){
             return res.status(404).send({ Status: responseMessages.FAILED,code:"404",msg:"Invalid User",Details: postidFoundOrNot});
         }
         else{
+            console.log("postidFoundOrNot----> ",postidFoundOrNot)
             const createComment={
                 postId:postidFoundOrNot.id,
                 userId:userId,

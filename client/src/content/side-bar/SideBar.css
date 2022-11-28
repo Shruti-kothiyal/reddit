@@ -1,0 +1,22 @@
+.side-bar{
+    display: flexbox;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 0px;
+    margin-left: auto;
+    margin-top: 0px;
+    flex-wrap: wrap;
+    height: 380px;
+    overflow: auto;
+    border-bottom: 1px solid lightgray;
+
+}
+.side-bar>div>p{
+    display: flex;
+}
+
+.main-sidebar{
+    display: flexbox;
+    background-color: white;
+    margin-right: 20px;
+}
